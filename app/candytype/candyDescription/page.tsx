@@ -17,8 +17,10 @@ import {
 } from "@/components/ui/accordion";
 import { useGetCandyTypeQuery } from "@/features/ApiSlice/candyTypeSlice";
 import { useSearchParams } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { useAddCandyToAssemblyLineMutation, useGetAssemblyLineQuery, useGetAssemblyLineSuggestionsQuery } from "@/features/ApiSlice/assemblyLineSlice";
+import {
+  useAddCandyToAssemblyLineMutation,
+  useGetAssemblyLineSuggestionsQuery,
+} from "@/features/ApiSlice/assemblyLineSlice";
 //import { useGetAssemblyLineSuggestionQuery } from "@/features/ApiSlice/assemblyLineSlice";
 
 type candyTypeData = {
@@ -51,21 +53,23 @@ const ProductionOrderDetailsPage = () => {
 };
 
 function Page() {
-  const {data} = useGetCandyTypeQuery({});
-  const orderDetails : candyTypeData[]  = data ?? [];
-  console.log(orderDetails);
+  const { data } = useGetCandyTypeQuery({});
+  const orderDetails: candyTypeData[] = data ?? [];
   const searchParams2 = useSearchParams();
-  const search = searchParams2.get('candyName');
-  console.log(search)
-  const {data : suggestion , isLoading,isSuccess,isError,error} = useGetAssemblyLineSuggestionsQuery({search});
-  
-  const [addCandyToAssemblyLine] = useAddCandyToAssemblyLineMutation({})
-  
-  const order: candyTypeData | undefined =
-    orderDetails.find((order) => {
-      return order.name == search?? "";
-    } );
-  console.log(order)
+  const search = searchParams2.get("candyName");
+  const {
+    data: suggestion,
+    isLoading,
+    isSuccess,
+    isError,
+    error,
+  } = useGetAssemblyLineSuggestionsQuery({ search });
+
+  const [addCandyToAssemblyLine] = useAddCandyToAssemblyLineMutation({});
+
+  const order: candyTypeData | undefined = orderDetails.find((order) => {
+    return order.name == search ?? "";
+  });
   return (
     <div
       className={
@@ -93,7 +97,9 @@ function Page() {
               <div className={"!mt-0"}>
                 {/* <h1 className={"text-xl font-extrabold"}>Estimated time:</h1> */}
                 <text
-                  className={"text-blue-500 text-lg tracking-wide font-semibold"}
+                  className={
+                    "text-blue-500 text-lg tracking-wide font-semibold"
+                  }
                 >
                   {toHoursAndMinutes(order.total_time)}
                 </text>
@@ -339,11 +345,9 @@ function Page() {
           </Accordion>
           {/* <Button variant={"secondary"} onClick={()=>{
             ////Add order to assembly line
-            console.log('click')
             if(isError){
               alert("All Assembly Line are occupied")
             }else if(isSuccess){
-              console.log(suggestion.name)
               addCandyToAssemblyLine({assemblyLine : suggestion.name, candyType : search})
             }
           }}>
